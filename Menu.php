@@ -2,7 +2,6 @@
 session_start();
 define("INCLUDING", 'TRUE');
 include('config.php');
-require_once (METHODS_PATH . '/idea.card.php');
 //include_once 'configurazioneDB.php';		
 include_once 'confDatabase.php';
 
