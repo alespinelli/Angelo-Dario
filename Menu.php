@@ -2,12 +2,14 @@
 session_start();
 define("INCLUDING", 'TRUE');
 include('config.php');
+require_once (METHODS_PATH . '/idea.card.php');
 //include_once 'configurazioneDB.php';		
 include_once 'confDatabase.php';
+
 $db = Database::getInstance();
 $mysqli = $db->getConnection();
 
-// controllo se ¬è stato impostato l id per evitare che accedano direttamente senza fare il login
+// controllo se ¬¨√® stato impostato l id per evitare che accedano direttamente senza fare il login
 if( !isset($_SESSION['id']) )
 	header("Location: index.php");
 	
@@ -30,7 +32,7 @@ $result_prov=$mysqli->query($SQLprov);
 $dati_prov=$result_prov->fetch_assoc();
 
 // per conoscere le persone che lavorano nell azienda
-$SQLpers="SELECT NOME,COGNOME FROM PERSONE JOIN AZIENDE A ON A.ID_UTENTE=AZIENDA WHERE AZIENDA='".$_SESSION['id']."'";
+$SQLpers="SELECT NOME,COGNOME,INFO,FOTO FROM PERSONE JOIN AZIENDE A ON A.ID_UTENTE=AZIENDA WHERE AZIENDA='".$_SESSION['id']."'";
 $result_pers=$mysqli->query($SQLpers);
 //per le idee sviluppate dagli utenti dell azienda
 $SQLidee="SELECT TITOLO,P.ID_UTENTE FROM IDEE JOIN PERSONE P ON CREATORE=P.ID_UTENTE JOIN AZIENDE A ON AZIENDA=A.ID_UTENTE WHERE A.ID_UTENTE='".$_SESSION['id']."'";
@@ -167,9 +169,9 @@ $result_idee=$mysqli->query($SQLidee);
 		        <?php 
 		         echo "L'azienda:<b> ".$dati['RAGIONE_SOCIALE']."</b> ha sede in ".$dati['NAZIONE'].".";
 		       echo "<br>";
-		       echo "La sede è a ".$dati['CITTA']." che è in provincia di ".$dati_prov['NOME'].". La regione è :".$dati['REGIONE'];
+		       echo "La sede √® a ".$dati['CITTA']." che √® in provincia di ".$dati_prov['NOME'].". La regione √® :".$dati['REGIONE'];
 		        echo "<br>";
-		        echo "L'indirizzo è: <b>".$dati['INDIRIZZO']."</b><br>";
+		        echo "L'indirizzo √®: <b>".$dati['INDIRIZZO']."</b><br>";
 		        echo "cap:".$dati['CAP']."partita iva: ".$dati['PARTITA_IVA'];
 		       ?>
 		       </div>
@@ -181,12 +183,22 @@ $result_idee=$mysqli->query($SQLidee);
      							   <div class="col-sm-3">
       								    <div class="well">
      								      <p>'.$row["NOME"].$row["COGNOME"].'</p>
-     								      <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+     								      <img src="img/profile/'; 
+   							   				if($row[FOTO]==NULL) 
+   							   					echo 'default.png';
+   							   					else echo $row[FOTO];
+   							   					echo '" class="img-circle" height="55" width="55" alt="Avatar">
     								     </div>
     							    </div>
      								   <div class="col-sm-9">
           								<div class="well">
-         								   <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I dont</p>
+          								<p>';
+   							   				if($row["INFO"]==NUll)
+   							   				echo "Nesuna descrizione";
+   							   				else echo $row["INFO"];
+   							   				
+   							   echo '</p>
+         								   
     							    	  </div>
       								  </div>
    							   </div>
@@ -211,7 +223,7 @@ $result_idee=$mysqli->query($SQLidee);
 			        </div>
 	
 		<!-- pannello sulle ide SEGUITE -->
-				<div class="tab-pane fade" id="IdeeAzienda">
+				<div class="tab-pane fade" id="IdeeUtente">
 			        <?php /*ZONA IDEE SEGUITE */
 			        foreach($idees as $array => $idea){
 				        
