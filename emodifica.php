@@ -17,9 +17,71 @@ $nazione = $_REQUEST["nazione"];
 $provincia = $_REQUEST["provincia"];
 $regione = $_REQUEST["regione"];
 $p_iva=$_REQUEST["partita_iva"];
+
+//recupero valori relativi all'immagine che serviranno anche per i controlli relativi ad essa
+$img_name = $_FILES['immagine']['name'];
+$img_new_name = $_SESSION['id'].'jpg';
+$img_temp_name = $_FILES['immagine']['tmp_name'];
+$img_dir = 'img/' . $img_new_name;
+$img_err = $_FILES['immagine']['error'];
+$img_size = $_FILES['immagine']['size'];
+$img_ext = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
+
 //aggiorno la tabella AZIENDE
 $upd_azienda="UPDATE AZIENDE SET RAGIONE_SOCIALE='$rag_soc',CAP='$cap', INDIRIZZO='$indirizzo', CITTA='$citta', NAZIONE='$nazione', REGIONE='$regione', PARTITA_IVA='$p_iva' where ID_UTENTE='$_SESSION[id]'";
 $risultato_az= $mysqli->query($upd_azienda);
+
+//Sposto immagine nella cartella del database
+	//Controllo immagine
+if($img_err!=UPLOAD_ERR_OK)
+{
+	switch ($img_err) 
+	{	
+		case UPLOAD_ERR_INI_SIZE:
+			header("Location:modificaAz.php?errore=2");
+			break;
+		case UPLOAD_ERR_FORM_SIZE:
+			header("Location:modificaAz.php?errore=2");
+			break;
+		case UPLOAD_ERR_PARTIAL:
+			header("Location:modificaAz.php?errore=3");
+			break;
+		case UPLOAD_ERR_NO_FILE:
+			header("Location:modificaAz.php?errore=3");
+			break;
+		case UPLOAD_ERR_NO_TMP_DIR:
+			header("Location:modificaAz.php?errore=3");
+			break;
+		case UPLOAD_ERR_CANT_WRITE:
+			header("Location:modificaAz.php?errore=3");
+			break;
+		case UPLOAD_ERR_EXTENSION:
+			header("Location:modificaAz.php?errore=1");
+			break;
+		default:
+			header("Location:modificaAz.php?errore=3");
+			break;
+	}
+	exit;
+}
+else 
+{ //nessun errore di compatibilità con il sistema
+	
+	/*Controllo estensione  (da decidere)
+	if ( !in_array($img_ext, array('jpg','jpeg','png','gif')) ) {
+			header("Location:modificaW.php?errore=1");
+			exit;
+		}
+	//Controllo dimensione (da decidere)
+	if ( $size/1024/1024 > 2 ) {
+			header("Location:modificaW.php?errore=2");
+			exit;
+		}*/
+
+	//Spostamento effettivo
+	move_uploaded_file($img_temp_name,$img_dir);
+}
+
 //recupero i valori della tabella CONTATTI
 $cellulare= $_REQUEST["cellulare"];
 $face=$_REQUEST["facebook"];
