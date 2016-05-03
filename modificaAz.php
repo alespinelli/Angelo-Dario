@@ -154,6 +154,11 @@ $result_idee=$mysqli->query($SQLidee);
     			<textarea class="form-control" id="parlaci" name="parlaci" rows="3"><?php echo $dati["parlaci"];?></textarea>
   				</fieldset>
   				
+				<fieldset class="form-group">
+				<label for="immagine">File input</label>
+				<input type="file" class="form-control-file" id="immagine">
+				</fieldset>
+  				
   			</div>
    			<input id="aggiorna" value="AGGIORNA" type="submit" name="aggiorna"></td>
  		 </form>
