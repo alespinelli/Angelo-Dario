@@ -59,11 +59,16 @@ $result_idee=$mysqli->query($SQLidee);
 	   
 	   <div class="tab-content">
  		   <div class="tab-pane active" id="personale"><h1></h1>
-  			 <form method="post" name="registra" action="emodifica.php" id="registra">
+  			 <form method="post" name="registra" action="emodifica.php" id="registra" enctype="multipart/form-data">
  				 <fieldset class="form-group">
  				  <label for="Nome">Ragione Sociale</label>
     			<input type="nome" class="form-control" id="nome" name="nome" value='<?php echo $dati["RAGIONE_SOCIALE"]; ?>' >
   				</fieldset>
+  				
+  				<fieldset class="form-group">
+				<label for="immagine">Immagine</label>
+				<input type="file" class="form-control" name="immagine" id="immagine">
+				</fieldset>
 
   				<fieldset class="form-group">
   				  <label for="cap">Cap</label>
